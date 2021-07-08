@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
   <h:head>
     <h:title>HTS Refarral</h:title>
     <model>
@@ -8,10 +8,13 @@
           <text id="/hts_referral/encounter_date:jr:constraintMsg">
             <value>Encounter date can not be in the future</value>
           </text>
+          <text id="/hts_referral/observation/_161561_dateEnrolled_99DCT:jr:constraintMsg">
+            <value>Date enrolled cannot be in the past or before HIV test date.</value>
+          </text>
         </translation>
       </itext>
       <instance>
-        <hts_referral delimiter="#" id="hts_referral" prefix="J1!hts_referral!" version="2020-08-27 11:08:28">
+        <hts_referral id="hts_referral" prefix="J1!hts_referral!" delimiter="#" version="2021-07-09 10:08:59">
           <inputs>
             <meta>
               <location>
@@ -53,10 +56,16 @@
           <head/>
           <form_uuid/>
           <encounter_type_uuid/>
+          <this_facility_name/>
+          <client_date_tested/>
           <encounter_date/>
           <observation>
-            <_163526_acilityReferred_99DCT/>
-            <_163527_remarks_99DCT/>
+            <_160481_referralFacility_99DCT/>
+            <same_facility_referral/>
+            <other_facility_referral/>
+            <_161550_facilityReferred_99DCT/>
+            <_161561_dateEnrolled_99DCT/>
+            <_163042_remarks_99DCT/>
           </observation>
           <audit_trail>
             <created_by/>
@@ -73,25 +82,31 @@
       <bind nodeset="/hts_referral/inputs/user/name" type="string"/>
       <bind nodeset="/hts_referral/inputs/source" type="string"/>
       <bind nodeset="/hts_referral/inputs/source_id" type="string"/>
-      <bind nodeset="/hts_referral/inputs/contact/_id" type="db:clinic"/>
+      <bind nodeset="/hts_referral/inputs/contact/_id" type="db:universal_client"/>
       <bind nodeset="/hts_referral/inputs/contact/name" type="string"/>
       <bind nodeset="/hts_referral/inputs/contact/kemr_uuid" type="string"/>
       <bind nodeset="/hts_referral/inputs/contact/contact/_id" type="db:person"/>
       <bind nodeset="/hts_referral/inputs/contact/contact/name" type="string"/>
       <bind nodeset="/hts_referral/inputs/contact/parent/parent/contact/name" type="string"/>
       <bind nodeset="/hts_referral/inputs/contact/parent/parent/contact/phone" type="string"/>
-      <bind calculate="../inputs/source" nodeset="/hts_referral/source" type="string"/>
-      <bind calculate="../inputs/source_id" nodeset="/hts_referral/source_id" type="string"/>
-      <bind calculate="../inputs/contact/_id" nodeset="/hts_referral/place_id" type="string"/>
-      <bind calculate="../inputs/contact/name" nodeset="/hts_referral/place_name" type="string"/>
-      <bind calculate="../inputs/contact/contact/name" nodeset="/hts_referral/head" type="string"/>
-      <bind calculate="'9284828e-ce55-11e9-a32f-2a2ae2dbcce4'" nodeset="/hts_referral/form_uuid" type="string"/>
-      <bind calculate="'9c0a7a57-62ff-4f75-babe-5835b0e921b7'" nodeset="/hts_referral/encounter_type_uuid" type="string"/>
-      <bind constraint="floor(decimal-date-time(.)) &lt;= floor(decimal-date-time(today())) and floor( difference-in-months( . , today() ) div 12 ) &lt;= 100" jr:constraintMsg="jr:itext('/hts_referral/encounter_date:jr:constraintMsg')" nodeset="/hts_referral/encounter_date" required="true()" type="date"/>
-      <bind nodeset="/hts_referral/observation/_163526_acilityReferred_99DCT" required="false()" type="string"/>
-      <bind nodeset="/hts_referral/observation/_163527_remarks_99DCT" required="false()" type="string"/>
-      <bind calculate="../../inputs/user/name" nodeset="/hts_referral/audit_trail/created_by" type="string"/>
-      <bind calculate="concat('uuid:', uuid())" nodeset="/hts_referral/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/hts_referral/source" type="string" calculate="../inputs/source"/>
+      <bind nodeset="/hts_referral/source_id" type="string" calculate="../inputs/source_id"/>
+      <bind nodeset="/hts_referral/place_id" type="string" calculate="../inputs/contact/_id"/>
+      <bind nodeset="/hts_referral/place_name" type="string" calculate="../inputs/contact/name"/>
+      <bind nodeset="/hts_referral/head" type="string" calculate="../inputs/contact/contact/name"/>
+      <bind nodeset="/hts_referral/form_uuid" type="string" calculate="'5af9791b-05e9-4ed8-a872-4e2d8c3b475f'"/>
+      <bind nodeset="/hts_referral/encounter_type_uuid" type="string" calculate="'9c0a7a57-62ff-4f75-babe-5835b0e921b7'"/>
+      <bind nodeset="/hts_referral/this_facility_name" type="string" required="true()" calculate="instance('contact-summary')/context/thisFacilityName"/>
+      <bind nodeset="/hts_referral/client_date_tested" type="string" calculate="instance('contact-summary')/context/hts_retest_latest/test_date"/>
+      <bind nodeset="/hts_referral/encounter_date" type="date" jr:constraintMsg="jr:itext('/hts_referral/encounter_date:jr:constraintMsg')" constraint="floor(decimal-date-time(.)) &lt;= floor(decimal-date-time(today())) and floor( difference-in-months( . , today() ) div 12 ) &lt;= 100" required="true()"/>
+      <bind nodeset="/hts_referral/observation/_160481_referralFacility_99DCT" type="select1" required="true()"/>
+      <bind nodeset="/hts_referral/observation/same_facility_referral" type="string" required="true()" relevant="selected( /hts_referral/observation/_160481_referralFacility_99DCT ,'_163266_thisFacility_99DCT')" calculate="if( /hts_referral/this_facility_name  !='',  /hts_referral/this_facility_name ,'')"/>
+      <bind nodeset="/hts_referral/observation/other_facility_referral" type="string" required="true()" relevant="selected( /hts_referral/observation/_160481_referralFacility_99DCT ,'_164407_otherFacility_99DCT')"/>
+      <bind nodeset="/hts_referral/observation/_161550_facilityReferred_99DCT" type="string" required="true()" calculate="if( /hts_referral/observation/same_facility_referral  !='', /hts_referral/observation/same_facility_referral ,  /hts_referral/observation/other_facility_referral )"/>
+      <bind nodeset="/hts_referral/observation/_161561_dateEnrolled_99DCT" type="date" jr:constraintMsg="jr:itext('/hts_referral/observation/_161561_dateEnrolled_99DCT:jr:constraintMsg')" constraint=". &gt;=  /hts_referral/client_date_tested " required="true()"/>
+      <bind nodeset="/hts_referral/observation/_163042_remarks_99DCT" type="string" required="false()"/>
+      <bind nodeset="/hts_referral/audit_trail/created_by" type="string" calculate="../../inputs/user/name"/>
+      <bind nodeset="/hts_referral/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
     </model>
   </h:head>
   <h:body class="pages">
@@ -136,10 +151,27 @@
     </input>
     <group appearance="field-list" ref="/hts_referral/observation">
       <label>Referral</label>
-      <input ref="/hts_referral/observation/_163526_acilityReferred_99DCT">
-        <label>Facility referred to:</label>
+      <select1 ref="/hts_referral/observation/_160481_referralFacility_99DCT">
+        <label>Referred to</label>
+        <item>
+          <label>This facility</label>
+          <value>_163266_thisFacility_99DCT</value>
+        </item>
+        <item>
+          <label>Other facility</label>
+          <value>_164407_otherFacility_99DCT</value>
+        </item>
+      </select1>
+      <input ref="/hts_referral/observation/same_facility_referral">
+        <label>Facility name</label>
       </input>
-      <input ref="/hts_referral/observation/_163527_remarks_99DCT">
+      <input ref="/hts_referral/observation/other_facility_referral">
+        <label>Facility name</label>
+      </input>
+      <input ref="/hts_referral/observation/_161561_dateEnrolled_99DCT">
+        <label>Date preferred to be enrolled:</label>
+      </input>
+      <input ref="/hts_referral/observation/_163042_remarks_99DCT">
         <label>Remarks:</label>
       </input>
     </group>

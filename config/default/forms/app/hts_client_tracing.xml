@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
   <h:head>
     <h:title>HTS Client Tracing</h:title>
     <model>
@@ -11,7 +11,7 @@
         </translation>
       </itext>
       <instance>
-        <hts_client_tracing delimiter="#" id="hts_client_tracing" prefix="J1!hts_client_tracing!" version="2020-08-27 18:43:52">
+        <hts_client_tracing id="hts_client_tracing" prefix="J1!hts_client_tracing!" delimiter="#" version="2021-05-31 11:56:03">
           <inputs>
             <meta>
               <location>
@@ -27,17 +27,9 @@
               <_id/>
               <name/>
               <kemr_uuid/>
-              <contact>
-                <_id/>
-                <name/>
-              </contact>
+              <patient_telephone/>
               <parent>
-                <parent>
-                  <contact>
-                    <name/>
-                    <phone/>
-                  </contact>
-                </parent>
+                <parent/>
               </parent>
             </contact>
           </inputs>
@@ -51,11 +43,14 @@
           <encounter_date/>
           <observation>
             <_164966_tracingType_99DCT/>
+            <call_button/>
+            <no_phone/>
             <_159811_outcome_99DCT/>
             <_1779_phoneWhyNot_99DCT/>
             <_5622_phoneSpecify_99DCT/>
             <_1779_physicalWhyNot_99DCT/>
             <_5622_physicalSpecify_99DCT/>
+            <linkage_alert/>
             <_5622_remarks_99DCT/>
           </observation>
           <group_review>
@@ -95,55 +90,55 @@
       <bind nodeset="/hts_client_tracing/inputs" relevant="./source = 'user'"/>
       <bind nodeset="/hts_client_tracing/inputs/source" type="string"/>
       <bind nodeset="/hts_client_tracing/inputs/source_id" type="string"/>
-      <bind nodeset="/hts_client_tracing/inputs/contact/_id" type="db:clinic"/>
+      <bind nodeset="/hts_client_tracing/inputs/contact/_id" type="db:universal_client"/>
       <bind nodeset="/hts_client_tracing/inputs/contact/name" type="string"/>
       <bind nodeset="/hts_client_tracing/inputs/contact/kemr_uuid" type="string"/>
-      <bind nodeset="/hts_client_tracing/inputs/contact/contact/_id" type="db:person"/>
-      <bind nodeset="/hts_client_tracing/inputs/contact/contact/name" type="string"/>
-      <bind nodeset="/hts_client_tracing/inputs/contact/parent/parent/contact/name" type="string"/>
-      <bind nodeset="/hts_client_tracing/inputs/contact/parent/parent/contact/phone" type="string"/>
-      <bind calculate="../inputs/source" nodeset="/hts_client_tracing/source" type="string"/>
-      <bind calculate="../inputs/source_id" nodeset="/hts_client_tracing/source_id" type="string"/>
-      <bind calculate="../inputs/contact/_id" nodeset="/hts_client_tracing/place_id" type="string"/>
-      <bind calculate="../inputs/contact/name" nodeset="/hts_client_tracing/place_name" type="string"/>
-      <bind calculate="../inputs/contact/contact/name" nodeset="/hts_client_tracing/head" type="string"/>
-      <bind calculate="'15ed03d2-c972-11e9-a32f-2a2ae2dbcce4'" nodeset="/hts_client_tracing/form_uuid" type="string"/>
-      <bind calculate="'9c0a7a57-62ff-4f75-babe-5835b0e921b7'" nodeset="/hts_client_tracing/encounter_type_uuid" type="string"/>
-      <bind constraint=". &lt; today()" jr:constraintMsg="jr:itext('/hts_client_tracing/encounter_date:jr:constraintMsg')" nodeset="/hts_client_tracing/encounter_date" required="true()" type="date"/>
-      <bind nodeset="/hts_client_tracing/observation/_164966_tracingType_99DCT" required="true()" type="select1"/>
-      <bind nodeset="/hts_client_tracing/observation/_159811_outcome_99DCT" required="true()" type="select1"/>
-      <bind nodeset="/hts_client_tracing/observation/_1779_phoneWhyNot_99DCT" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_1650_phone_99DCT&quot;" required="true()" type="select1"/>
-      <bind nodeset="/hts_client_tracing/observation/_5622_phoneSpecify_99DCT" relevant=" /hts_client_tracing/observation/_1779_phoneWhyNot_99DCT =&quot;_5622_other_99DCT&quot;" required="false()" type="string"/>
-      <bind nodeset="/hts_client_tracing/observation/_1779_physicalWhyNot_99DCT" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_164965_physical_99DCT&quot;" required="true()" type="select1"/>
-      <bind nodeset="/hts_client_tracing/observation/_5622_physicalSpecify_99DCT" relevant=" /hts_client_tracing/observation/_1779_physicalWhyNot_99DCT =&quot;_5622_otherInfo_99DCT&quot;" required="false()" type="string"/>
-      <bind nodeset="/hts_client_tracing/observation/_5622_remarks_99DCT" required="false()" type="string"/>
+      <bind nodeset="/hts_client_tracing/inputs/contact/patient_telephone" type="string"/>
+      <bind nodeset="/hts_client_tracing/source" type="string" calculate="../inputs/source"/>
+      <bind nodeset="/hts_client_tracing/source_id" type="string" calculate="../inputs/source_id"/>
+      <bind nodeset="/hts_client_tracing/place_id" type="string" calculate="../inputs/contact/_id"/>
+      <bind nodeset="/hts_client_tracing/place_name" type="string" calculate="../inputs/contact/name"/>
+      <bind nodeset="/hts_client_tracing/head" type="string" calculate="../inputs/contact/contact/name"/>
+      <bind nodeset="/hts_client_tracing/form_uuid" type="string" calculate="'15ed03d2-c972-11e9-a32f-2a2ae2dbcce4'"/>
+      <bind nodeset="/hts_client_tracing/encounter_type_uuid" type="string" calculate="'9c0a7a57-62ff-4f75-babe-5835b0e921b7'"/>
+      <bind nodeset="/hts_client_tracing/encounter_date" type="date" constraint=". &lt; today()" jr:constraintMsg="jr:itext('/hts_client_tracing/encounter_date:jr:constraintMsg')" required="true()"/>
+      <bind nodeset="/hts_client_tracing/observation/_164966_tracingType_99DCT" type="select1" required="true()"/>
+      <bind nodeset="/hts_client_tracing/observation/call_button" readonly="true()" type="string" relevant=" /hts_client_tracing/observation/_164966_tracingType_99DCT ='_1650_phone_99DCT' and  /hts_client_tracing/inputs/contact/patient_telephone !=''"/>
+      <bind nodeset="/hts_client_tracing/observation/no_phone" readonly="true()" type="string" relevant=" /hts_client_tracing/observation/_164966_tracingType_99DCT ='_1650_phone_99DCT' and  /hts_client_tracing/inputs/contact/patient_telephone =''"/>
+      <bind nodeset="/hts_client_tracing/observation/_159811_outcome_99DCT" type="select1" required="true()"/>
+      <bind nodeset="/hts_client_tracing/observation/_1779_phoneWhyNot_99DCT" type="select1" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_1650_phone_99DCT&quot;" required="true()"/>
+      <bind nodeset="/hts_client_tracing/observation/_5622_phoneSpecify_99DCT" type="string" relevant=" /hts_client_tracing/observation/_1779_phoneWhyNot_99DCT =&quot;_5622_other_99DCT&quot;" required="false()"/>
+      <bind nodeset="/hts_client_tracing/observation/_1779_physicalWhyNot_99DCT" type="select1" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_164965_physical_99DCT&quot;" required="true()"/>
+      <bind nodeset="/hts_client_tracing/observation/_5622_physicalSpecify_99DCT" type="string" relevant=" /hts_client_tracing/observation/_1779_physicalWhyNot_99DCT =&quot;_5622_otherInfo_99DCT&quot;" required="false()"/>
+      <bind nodeset="/hts_client_tracing/observation/linkage_alert" readonly="true()" type="string" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT ='_1065_contactedAndLinked_99DCT'"/>
+      <bind nodeset="/hts_client_tracing/observation/_5622_remarks_99DCT" type="string" required="false()"/>
       <bind nodeset="/hts_client_tracing/group_review/n_submit" readonly="true()" type="string"/>
       <bind nodeset="/hts_client_tracing/group_review/n_household_details_title" readonly="true()" type="string"/>
       <bind nodeset="/hts_client_tracing/group_review/n_household_details" readonly="true()" type="string"/>
       <bind nodeset="/hts_client_tracing/group_review/n_assessment_findings" readonly="true()" type="string"/>
       <bind nodeset="/hts_client_tracing/group_review/tracking" readonly="true()" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/physical" readonly="true()" relevant="selected(../../observation/_164966_tracingType_99DCT, '_1650_phone_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/phone" readonly="true()" relevant="selected(../../observation/_164966_tracingType_99DCT, '_164965_physical_99DCT')" type="string"/>
+      <bind nodeset="/hts_client_tracing/group_review/physical" readonly="true()" type="string" relevant="selected(../../observation/_164966_tracingType_99DCT, '_1650_phone_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/phone" readonly="true()" type="string" relevant="selected(../../observation/_164966_tracingType_99DCT, '_164965_physical_99DCT')"/>
       <bind nodeset="/hts_client_tracing/group_review/n_test_1_results" readonly="true()" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/contactedAndLinked" readonly="true()" relevant="selected(../../observation/_159811_outcome_99DCT, '_1065_contactedAndLinked_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/cintactedNotLinked" readonly="true()" relevant="selected(../../observation/_159811_outcome_99DCT, '_1066_contactedNotLinked_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/voluntaryExit" readonly="true()" relevant="selected(../../observation/_159811_outcome_99DCT, '_1118_notReached_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/n_hts_strategy" readonly="true()" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_1650_phone_99DCT&quot;" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/locationNotAvailable" readonly="true()" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_165073_locationMissing_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/wrongLocation" readonly="true()" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_165072_incorrect_location_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/callsNotGoingThrough" readonly="true()" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_1567_voluntaryExit_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/patientDied" readonly="true()" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_160034_died_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/others" readonly="true()" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_5622_other_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/notcontactedphysicaly" readonly="true()" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_164965_physical_99DCT&quot;" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/noLocation" readonly="true()" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_165073_noLocation_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/incorrect_location" readonly="true()" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_165072_wrong_location_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/Migrated" readonly="true()" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_160415_migrated_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/notFoundAtHome" readonly="true()" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_1706_kp_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/Died" readonly="true()" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_160034_died_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/Other" readonly="true()" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_5622_otherInfo_99DCT')" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/r_followup_contacted_linked" readonly="true()" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1065_contactedAndLinked_99DCT&quot;" type="string"/>
-      <bind nodeset="/hts_client_tracing/group_review/r_followup_note_positive" readonly="true()" relevant="selected(../../observation/_159811_outcome_99DCT, '_1065_contactedAndLinked_99DCT')" type="string"/>
-      <bind calculate="concat('uuid:', uuid())" nodeset="/hts_client_tracing/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/hts_client_tracing/group_review/contactedAndLinked" readonly="true()" type="string" relevant="selected(../../observation/_159811_outcome_99DCT, '_1065_contactedAndLinked_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/cintactedNotLinked" readonly="true()" type="string" relevant="selected(../../observation/_159811_outcome_99DCT, '_1066_contactedNotLinked_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/voluntaryExit" readonly="true()" type="string" relevant="selected(../../observation/_159811_outcome_99DCT, '_1118_notReached_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/n_hts_strategy" readonly="true()" type="string" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_1650_phone_99DCT&quot;"/>
+      <bind nodeset="/hts_client_tracing/group_review/locationNotAvailable" readonly="true()" type="string" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_165073_locationMissing_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/wrongLocation" readonly="true()" type="string" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_165072_incorrect_location_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/callsNotGoingThrough" readonly="true()" type="string" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_1567_voluntaryExit_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/patientDied" readonly="true()" type="string" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_160034_died_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/others" readonly="true()" type="string" relevant="selected(../../observation/_1779_phoneWhyNot_99DCT, '_5622_other_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/notcontactedphysicaly" readonly="true()" type="string" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1118_notReached_99DCT&quot; and  /hts_client_tracing/observation/_164966_tracingType_99DCT =&quot;_164965_physical_99DCT&quot;"/>
+      <bind nodeset="/hts_client_tracing/group_review/noLocation" readonly="true()" type="string" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_165073_noLocation_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/incorrect_location" readonly="true()" type="string" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_165072_wrong_location_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/Migrated" readonly="true()" type="string" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_160415_migrated_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/notFoundAtHome" readonly="true()" type="string" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_1706_kp_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/Died" readonly="true()" type="string" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_160034_died_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/Other" readonly="true()" type="string" relevant="selected(../../observation/_1779_physicalWhyNot_99DCT, '_5622_otherInfo_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/group_review/r_followup_contacted_linked" readonly="true()" type="string" relevant=" /hts_client_tracing/observation/_159811_outcome_99DCT =&quot;_1065_contactedAndLinked_99DCT&quot;"/>
+      <bind nodeset="/hts_client_tracing/group_review/r_followup_note_positive" readonly="true()" type="string" relevant="selected(../../observation/_159811_outcome_99DCT, '_1065_contactedAndLinked_99DCT')"/>
+      <bind nodeset="/hts_client_tracing/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
     </model>
   </h:head>
   <h:body class="pages">
@@ -154,19 +149,10 @@
         <input appearance="db-object" ref="/hts_client_tracing/inputs/contact/_id">
           <label>What is the patient's name?</label>
         </input>
-        <group ref="/hts_client_tracing/inputs/contact/contact">
-          <label>Contact</label>
-          <input appearance="db-object" ref="/hts_client_tracing/inputs/contact/contact/_id">
-            <label>ID of head of household</label>
-          </input>
-        </group>
         <group ref="/hts_client_tracing/inputs/contact/parent">
           <label>Parent</label>
           <group ref="/hts_client_tracing/inputs/contact/parent/parent">
             <label>Parent</label>
-            <group ref="/hts_client_tracing/inputs/contact/parent/parent/contact">
-              <label>Contact</label>
-            </group>
           </group>
         </group>
       </group>
@@ -187,6 +173,12 @@
           <value>_164965_physical_99DCT</value>
         </item>
       </select1>
+      <input ref="/hts_client_tracing/observation/call_button">
+        <label>[&lt;span style='background-color:#F0F4FD; border:1px solid #007AC0; padding: 0.5em; border-radius: 4px; text-decoration:none; display: block; margin-left: auto; margin-right: auto; width: 40%; text-align: center;'&gt;&lt;i class=&quot;fa fa-phone&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&amp;nbsp;Call <output value=" /hts_client_tracing/inputs/contact/name "/>&lt;/span&gt;](tel://<output value=" /hts_client_tracing/group_review/phone "/>)</label>
+      </input>
+      <input ref="/hts_client_tracing/observation/no_phone">
+        <label>&lt;span style=&quot;color:red;font-weight:bold&quot;&gt;<output value=" /hts_client_tracing/inputs/contact/name "/> does not have a registered phone number&lt;/span&gt;</label>
+      </input>
       <select1 ref="/hts_client_tracing/observation/_159811_outcome_99DCT">
         <label>Tracing Outcome</label>
         <item>
@@ -203,13 +195,9 @@
         </item>
       </select1>
       <select1 ref="/hts_client_tracing/observation/_1779_phoneWhyNot_99DCT">
-        <label>Why was phone contact not attempted?</label>
+        <label>Why was phone tracing not successful?</label>
         <item>
-          <label>No locator information</label>
-          <value>_165073_locationMissing_99DCT</value>
-        </item>
-        <item>
-          <label>Incorrect locator information</label>
+          <label>Wrong phone number</label>
           <value>_165072_incorrect_location_99DCT</value>
         </item>
         <item>
@@ -226,10 +214,10 @@
         </item>
       </select1>
       <input ref="/hts_client_tracing/observation/_5622_phoneSpecify_99DCT">
-        <label>Specify why phone contact not attempted?</label>
+        <label>Other(specify)?</label>
       </input>
       <select1 ref="/hts_client_tracing/observation/_1779_physicalWhyNot_99DCT">
-        <label>Why was physical contacting not attempted?</label>
+        <label>Why was physical tracing not successful?</label>
         <item>
           <label>No locator information,</label>
           <value>_165073_noLocation_99DCT</value>
@@ -239,7 +227,7 @@
           <value>_165072_wrong_location_99DCT</value>
         </item>
         <item>
-          <label>Migrated</label>
+          <label>Relocated</label>
           <value>_160415_migrated_99DCT</value>
         </item>
         <item>
@@ -256,7 +244,10 @@
         </item>
       </select1>
       <input ref="/hts_client_tracing/observation/_5622_physicalSpecify_99DCT">
-        <label>Specify why physical contacting not attempted?</label>
+        <label>Other (specify)?</label>
+      </input>
+      <input ref="/hts_client_tracing/observation/linkage_alert">
+        <label>&lt;span style="color:red;font-weight:bold"&gt;Please fill UPN in the linkage form once you submit this form&lt;/span&gt;</label>
       </input>
       <input ref="/hts_client_tracing/observation/_5622_remarks_99DCT">
         <label>Remarks</label>

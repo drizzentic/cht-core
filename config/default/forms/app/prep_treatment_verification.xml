@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
   <h:head>
     <h:title>PrEP Treatment Verification</h:title>
     <model>
@@ -8,11 +8,11 @@
           <text id="/prep_treatment_verification/encounter_date:jr:constraintMsg">
             <value>Encounter date cannot be in the future</value>
           </text>
+          <text id="/prep_treatment_verification/observation/_160555_dateInitiatedOnPrEP_99DCT:jr:constraintMsg">
+            <value>Date initiated on PrEP should not be earlier that initial visit date and can not be in the future</value>
+          </text>
           <text id="/prep_treatment_verification/observation/_5096_nextAppointment_99DCT:jr:constraintMsg">
             <value>Next appointment date can not be before date initiated on PrEP</value>
-          </text>
-          <text id="/prep_treatment_verification/observation/_5096_verificationDate_99DCT:jr:constraintMsg">
-            <value>Can not e in the future</value>
           </text>
           <text id="/prep_treatment_verification/observation:jr:constraintMsg">
             <value>Can not be in the future</value>
@@ -20,7 +20,7 @@
         </translation>
       </itext>
       <instance>
-        <prep_treatment_verification delimiter="#" id="prep_treatment_verification" prefix="J1!prep_treatment_verification!" version="2020-09-17 10:03:45">
+        <prep_treatment_verification id="prep_treatment_verification" prefix="J1!prep_treatment_verification!" delimiter="#" version="2020-10-01 13:09:26">
           <inputs>
             <meta>
               <location>
@@ -35,6 +35,7 @@
             <contact>
               <_id/>
               <name/>
+              <kemr_uuid/>
               <contact>
                 <_id/>
                 <name/>
@@ -123,31 +124,32 @@
       <bind nodeset="/prep_treatment_verification/inputs/source_id" type="string"/>
       <bind nodeset="/prep_treatment_verification/inputs/contact/_id" type="db:clinic"/>
       <bind nodeset="/prep_treatment_verification/inputs/contact/name" type="string"/>
+      <bind nodeset="/prep_treatment_verification/inputs/contact/kemr_uuid" type="string"/>
       <bind nodeset="/prep_treatment_verification/inputs/contact/contact/_id" type="db:person"/>
       <bind nodeset="/prep_treatment_verification/inputs/contact/contact/name" type="string"/>
       <bind nodeset="/prep_treatment_verification/inputs/contact/parent/parent/contact/name" type="string"/>
       <bind nodeset="/prep_treatment_verification/inputs/contact/parent/parent/contact/phone" type="string"/>
-      <bind calculate="../inputs/source" nodeset="/prep_treatment_verification/source" type="string"/>
-      <bind calculate="../inputs/source_id" nodeset="/prep_treatment_verification/source_id" type="string"/>
-      <bind calculate="../inputs/contact/_id" nodeset="/prep_treatment_verification/place_id" type="string"/>
-      <bind calculate="../inputs/contact/name" nodeset="/prep_treatment_verification/place_name" type="string"/>
-      <bind calculate="../inputs/contact/contact/name" nodeset="/prep_treatment_verification/head" type="string"/>
-      <bind calculate="'5c64e61a-7fdc-11ea-bc55-0242ac130003'" nodeset="/prep_treatment_verification/form_uuid" type="string"/>
-      <bind calculate="'5c64e368-7fdc-11ea-bc55-0242ac130003'" nodeset="/prep_treatment_verification/encounter_type_uuid" type="string"/>
-      <bind constraint=". &lt;= today()" jr:constraintMsg="jr:itext('/prep_treatment_verification/encounter_date:jr:constraintMsg')" nodeset="/prep_treatment_verification/encounter_date" required="true()" type="date"/>
-      <bind jr:constraintMsg="jr:itext('/prep_treatment_verification/observation:jr:constraintMsg')" nodeset="/prep_treatment_verification/observation"/>
-      <bind constraint=". &lt;= today()" nodeset="/prep_treatment_verification/observation/_163526_enrollmenetDate_99DCT" required="true()" type="date"/>
-      <bind nodeset="/prep_treatment_verification/observation/_162724_facilityName_99DCT" required="true()" type="select1"/>
-      <bind nodeset="/prep_treatment_verification/observation/_1768_pepfarSites_99DCT" required="false()" type="select1"/>
-      <bind constraint=". &lt;= today()" nodeset="/prep_treatment_verification/observation/_160555_dateInitiatedOnPrEP_99DCT" type="date"/>
+      <bind nodeset="/prep_treatment_verification/source" type="string" calculate="../inputs/source"/>
+      <bind nodeset="/prep_treatment_verification/source_id" type="string" calculate="../inputs/source_id"/>
+      <bind nodeset="/prep_treatment_verification/place_id" type="string" calculate="../inputs/contact/_id"/>
+      <bind nodeset="/prep_treatment_verification/place_name" type="string" calculate="../inputs/contact/name"/>
+      <bind nodeset="/prep_treatment_verification/head" type="string" calculate="../inputs/contact/contact/name"/>
+      <bind nodeset="/prep_treatment_verification/form_uuid" type="string" calculate="'5c64e61a-7fdc-11ea-bc55-0242ac130003'"/>
+      <bind nodeset="/prep_treatment_verification/encounter_type_uuid" type="string" calculate="'5c64e368-7fdc-11ea-bc55-0242ac130003'"/>
+      <bind nodeset="/prep_treatment_verification/encounter_date" type="date" jr:constraintMsg="jr:itext('/prep_treatment_verification/encounter_date:jr:constraintMsg')" required="true()" constraint=". &lt;= today()"/>
+      <bind nodeset="/prep_treatment_verification/observation" jr:constraintMsg="jr:itext('/prep_treatment_verification/observation:jr:constraintMsg')"/>
+      <bind nodeset="/prep_treatment_verification/observation/_163526_enrollmenetDate_99DCT" type="date" required="true()" constraint=". &lt;= today()"/>
+      <bind nodeset="/prep_treatment_verification/observation/_162724_facilityName_99DCT" type="select1" required="true()"/>
+      <bind nodeset="/prep_treatment_verification/observation/_1768_pepfarSites_99DCT" type="select1" required="false()"/>
+      <bind nodeset="/prep_treatment_verification/observation/_160555_dateInitiatedOnPrEP_99DCT" type="date" jr:constraintMsg="jr:itext('/prep_treatment_verification/observation/_160555_dateInitiatedOnPrEP_99DCT:jr:constraintMsg')" constraint=". &gt;=  /prep_treatment_verification/observation/_163526_enrollmenetDate_99DCT  and . &lt;= today()"/>
       <bind nodeset="/prep_treatment_verification/observation/_164515_prepRegimen_99DCT" type="select1"/>
-      <bind nodeset="/prep_treatment_verification/observation/_162568_sourceOfInformation_99DCT" required="false()" type="select1"/>
-      <bind constraint=". &lt;= today()" jr:constraintMsg="jr:itext('/prep_treatment_verification/observation/_5096_verificationDate_99DCT:jr:constraintMsg')" nodeset="/prep_treatment_verification/observation/_5096_verificationDate_99DCT" required="true()" type="date"/>
-      <bind nodeset="/prep_treatment_verification/observation/_165109_prepStatus_99DCT" required="true()" type="select1"/>
-      <bind nodeset="/prep_treatment_verification/observation/_161555_discontinuationReason_99DCT" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1260_discontinue_99DCT&quot;" required="false()" type="select1"/>
-      <bind nodeset="/prep_treatment_verification/observation/other_reason" relevant=" /prep_treatment_verification/observation/_161555_discontinuationReason_99DCT =&quot;_5622_other_99DCT&quot;" required="false()" type="string"/>
-      <bind constraint=". &gt;=_160555_dateInitiatedOnPrEP_99DCT" jr:constraintMsg="jr:itext('/prep_treatment_verification/observation/_5096_nextAppointment_99DCT:jr:constraintMsg')" nodeset="/prep_treatment_verification/observation/_5096_nextAppointment_99DCT" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1257_continue_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_16290_restart_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1256_start_99DCT&quot;" required="false()" type="date"/>
-      <bind nodeset="/prep_treatment_verification/observation/_163042_comments_99DCT" required="false()" type="string"/>
+      <bind nodeset="/prep_treatment_verification/observation/_162568_sourceOfInformation_99DCT" type="select1" required="false()"/>
+      <bind nodeset="/prep_treatment_verification/observation/_5096_verificationDate_99DCT" readonly="true()" type="string" calculate=" /prep_treatment_verification/encounter_date "/>
+      <bind nodeset="/prep_treatment_verification/observation/_165109_prepStatus_99DCT" type="select1" required="true()"/>
+      <bind nodeset="/prep_treatment_verification/observation/_161555_discontinuationReason_99DCT" type="select1" required="false()" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1260_discontinue_99DCT&quot;"/>
+      <bind nodeset="/prep_treatment_verification/observation/other_reason" type="string" required="false()" relevant=" /prep_treatment_verification/observation/_161555_discontinuationReason_99DCT =&quot;_5622_other_99DCT&quot;"/>
+      <bind nodeset="/prep_treatment_verification/observation/_5096_nextAppointment_99DCT" type="date" jr:constraintMsg="jr:itext('/prep_treatment_verification/observation/_5096_nextAppointment_99DCT:jr:constraintMsg')" required="false()" constraint=". &gt;=_160555_dateInitiatedOnPrEP_99DCT" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1257_continue_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_16290_restart_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1256_start_99DCT&quot;"/>
+      <bind nodeset="/prep_treatment_verification/observation/_163042_comments_99DCT" type="string" required="false()"/>
       <bind nodeset="/prep_treatment_verification/group_review/n_submit" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/n_household_details_title" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/n_household_details" readonly="true()" type="string"/>
@@ -157,37 +159,37 @@
       <bind nodeset="/prep_treatment_verification/group_review/name_of_healthFacility" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/facilityname" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/pepfarSite" readonly="true()" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/yes" readonly="true()" relevant="selected(../../observation/_1768_pepfarSites_99DCT '_1065_yes_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/no" readonly="true()" relevant="selected(../../observation/_1768_pepfarSites_99DCT '_1066_no_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/unknown" readonly="true()" relevant="selected(../../observation/_1768_pepfarSites_99DCT '_1067_unknown_99DCT')" type="string"/>
+      <bind nodeset="/prep_treatment_verification/group_review/yes" readonly="true()" type="string" relevant="selected(../../observation/_1768_pepfarSites_99DCT '_1065_yes_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/no" readonly="true()" type="string" relevant="selected(../../observation/_1768_pepfarSites_99DCT '_1066_no_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/unknown" readonly="true()" type="string" relevant="selected(../../observation/_1768_pepfarSites_99DCT '_1067_unknown_99DCT')"/>
       <bind nodeset="/prep_treatment_verification/group_review/dateInitiated" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/date_initiated" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/current_regimen" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/currentRegimen" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/source_of_info" readonly="true()" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/Verbal" readonly="true()" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_163787_verbalReport_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/AppointmentCard" readonly="true()" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_1662_appointmentCard_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/WrittenRecord" readonly="true()" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_1238_writtenRecord_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/PhoneCall" readonly="true()" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_1650_phoneCall_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/SMS" readonly="true()" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_162969_sms_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/EIDDashboard" readonly="true()" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_160526_eidDashboard_99DCT')" type="string"/>
+      <bind nodeset="/prep_treatment_verification/group_review/Verbal" readonly="true()" type="string" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_163787_verbalReport_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/AppointmentCard" readonly="true()" type="string" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_1662_appointmentCard_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/WrittenRecord" readonly="true()" type="string" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_1238_writtenRecord_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/PhoneCall" readonly="true()" type="string" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_1650_phoneCall_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/SMS" readonly="true()" type="string" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_162969_sms_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/EIDDashboard" readonly="true()" type="string" relevant="selected(../../observation/_162568_sourceOfInformation_99DCT, '_160526_eidDashboard_99DCT')"/>
       <bind nodeset="/prep_treatment_verification/group_review/verification_date" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/verificationDate" readonly="true()" type="string"/>
       <bind nodeset="/prep_treatment_verification/group_review/prep_status" readonly="true()" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/start" readonly="true()" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_1256_start_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/restart" readonly="true()" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_16290_restart_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/continue" readonly="true()" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_1257_continue_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/discontinued" readonly="true()" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_1260_discontinue_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/discontinuation" readonly="true()" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1260_discontinue_99DCT&quot;" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/testedPositive" readonly="true()" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_138571_testedHIVpositive_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/clientRequest" readonly="true()" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_162696_clientRequest_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/notAdhered" readonly="true()" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_159598_notAdhered_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/viralSuppressionOfPartner" readonly="true()" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_1302_viralSupression_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/tooManyTests" readonly="true()" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_164401_manyHIVtest_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/Other" readonly="true()" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_5622_other_99DCT')" type="string"/>
-      <bind nodeset="/prep_treatment_verification/group_review/nextAppointment" readonly="true()" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1257_continue_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_16290_restart_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1256_start_99DCT&quot;" type="string"/>
+      <bind nodeset="/prep_treatment_verification/group_review/start" readonly="true()" type="string" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_1256_start_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/restart" readonly="true()" type="string" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_16290_restart_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/continue" readonly="true()" type="string" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_1257_continue_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/discontinued" readonly="true()" type="string" relevant="selected(../../observation/_165109_prepStatus_99DCT, '_1260_discontinue_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/discontinuation" readonly="true()" type="string" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1260_discontinue_99DCT&quot;"/>
+      <bind nodeset="/prep_treatment_verification/group_review/testedPositive" readonly="true()" type="string" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_138571_testedHIVpositive_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/clientRequest" readonly="true()" type="string" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_162696_clientRequest_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/notAdhered" readonly="true()" type="string" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_159598_notAdhered_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/viralSuppressionOfPartner" readonly="true()" type="string" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_1302_viralSupression_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/tooManyTests" readonly="true()" type="string" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_164401_manyHIVtest_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/Other" readonly="true()" type="string" relevant="selected(../../observation/_161555_discontinuationReason_99DCT, '_5622_other_99DCT')"/>
+      <bind nodeset="/prep_treatment_verification/group_review/nextAppointment" readonly="true()" type="string" relevant=" /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1257_continue_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_16290_restart_99DCT&quot; or  /prep_treatment_verification/observation/_165109_prepStatus_99DCT =&quot;_1256_start_99DCT&quot;"/>
       <bind nodeset="/prep_treatment_verification/group_review/NextAppointmentDate" readonly="true()" type="string"/>
-      <bind calculate="concat('uuid:', uuid())" nodeset="/prep_treatment_verification/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/prep_treatment_verification/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
     </model>
   </h:head>
   <h:body class="pages">

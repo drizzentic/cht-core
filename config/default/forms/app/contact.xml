@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms">
   <h:head>
     <h:title>Contact Form</h:title>
     <model>
@@ -35,7 +35,7 @@
         </translation>
       </itext>
       <instance>
-        <contact delimiter="#" id="contact" prefix="J1!contact!" version="2020-09-21 08:46:57">
+        <contact id="contact" prefix="J1!contact!" delimiter="#" version="2021-02-23 19:50:55">
           <inputs>
             <meta>
               <location>
@@ -50,6 +50,8 @@
             <contact>
               <_id/>
               <name/>
+              <kemr_uuid/>
+              <patient_sex/>
               <contact>
                 <_id/>
                 <name/>
@@ -69,10 +71,13 @@
           <place_id/>
           <place_name/>
           <head/>
+          <sex/>
           <form_uuid/>
           <encounter_type_uuid/>
           <encounter_date/>
           <observation>
+            <populationTypeMale/>
+            <populationTypeFemale/>
             <_164929_populationType_99DCT/>
             <_165028_alias_99DCT/>
             <_160638_altContact_99DCT/>
@@ -103,37 +108,42 @@
       <bind nodeset="/contact/inputs/source_id" type="string"/>
       <bind nodeset="/contact/inputs/contact/_id" type="db:clinic"/>
       <bind nodeset="/contact/inputs/contact/name" type="string"/>
+      <bind nodeset="/contact/inputs/contact/kemr_uuid" type="string"/>
+      <bind nodeset="/contact/inputs/contact/patient_sex" type="string"/>
       <bind nodeset="/contact/inputs/contact/contact/_id" type="db:person"/>
       <bind nodeset="/contact/inputs/contact/contact/name" type="string"/>
       <bind nodeset="/contact/inputs/contact/parent/parent/contact/name" type="string"/>
       <bind nodeset="/contact/inputs/contact/parent/parent/contact/phone" type="string"/>
-      <bind calculate="../inputs/source" nodeset="/contact/source" type="string"/>
-      <bind calculate="../inputs/source_id" nodeset="/contact/source_id" type="string"/>
-      <bind calculate="../inputs/contact/_id" nodeset="/contact/place_id" type="string"/>
-      <bind calculate="../inputs/contact/name" nodeset="/contact/place_name" type="string"/>
-      <bind calculate="../inputs/contact/contact/name" nodeset="/contact/head" type="string"/>
-      <bind calculate="'185dec84-df6f-4fc7-a370-15aa8be531ec'" nodeset="/contact/form_uuid" type="string"/>
-      <bind calculate="'ea68aad6-4655-4dc5-80f2-780e33055a9e'" nodeset="/contact/encounter_type_uuid" type="string"/>
-      <bind constraint=". &lt;= today()" jr:constraintMsg="jr:itext('/contact/encounter_date:jr:constraintMsg')" nodeset="/contact/encounter_date" required="true()" type="date"/>
-      <bind nodeset="/contact/observation/_164929_populationType_99DCT" required="true()" type="select1"/>
-      <bind nodeset="/contact/observation/_165028_alias_99DCT" required="false()" type="string"/>
-      <bind constraint="regex(., '^[A-Z]{1}[a-z]{1,14}(?: [A-Za-z]+){0,2}$')" jr:constraintMsg="jr:itext('/contact/observation/_160638_altContact_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_160638_altContact_99DCT" required="false()" type="string"/>
-      <bind constraint="regex(.,'^([+]?[1-9]{3})([0-9]{9})$') or regex(.,'^[0-9]{10}$')" jr:constraintMsg="jr:itext('/contact/observation/_160642_altContactPhone_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_160642_altContactPhone_99DCT" required="false()" type="string"/>
-      <bind nodeset="/contact/observation/_165004_contactedByPeerEductor_99DCT" required="false()" type="select1"/>
-      <bind nodeset="/contact/observation/_165137_programReceivingServiceFrom_99DCT" relevant=" /contact/observation/_165004_contactedByPeerEductor_99DCT =&quot;_1065_yes_99DCT&quot;" type="string"/>
+      <bind nodeset="/contact/source" type="string" calculate="../inputs/source"/>
+      <bind nodeset="/contact/source_id" type="string" calculate="../inputs/source_id"/>
+      <bind nodeset="/contact/place_id" type="string" calculate="../inputs/contact/_id"/>
+      <bind nodeset="/contact/place_name" type="string" calculate="../inputs/contact/name"/>
+      <bind nodeset="/contact/head" type="string" calculate="../inputs/contact/contact/name"/>
+      <bind nodeset="/contact/sex" type="string" calculate="../inputs/contact/patient_sex"/>
+      <bind nodeset="/contact/form_uuid" type="string" calculate="'185dec84-df6f-4fc7-a370-15aa8be531ec'"/>
+      <bind nodeset="/contact/encounter_type_uuid" type="string" calculate="'ea68aad6-4655-4dc5-80f2-780e33055a9e'"/>
+      <bind nodeset="/contact/encounter_date" type="date" required="true()" jr:constraintMsg="jr:itext('/contact/encounter_date:jr:constraintMsg')" constraint=". &lt;= today()"/>
+      <bind nodeset="/contact/observation/populationTypeMale" type="select1" relevant=" /contact/sex ='male'" required="true()"/>
+      <bind nodeset="/contact/observation/populationTypeFemale" type="select1" relevant=" /contact/sex ='female'" required="true()"/>
+      <bind nodeset="/contact/observation/_164929_populationType_99DCT" type="string" calculate="if( /contact/observation/populationTypeMale  !='',  /contact/observation/populationTypeMale ,  /contact/observation/populationTypeFemale )" required="true()"/>
+      <bind nodeset="/contact/observation/_165028_alias_99DCT" type="string" required="false()"/>
+      <bind nodeset="/contact/observation/_160638_altContact_99DCT" type="string" required="false()" jr:constraintMsg="jr:itext('/contact/observation/_160638_altContact_99DCT:jr:constraintMsg')" constraint="regex(., '^[A-Z]{1}[a-z]{1,14}(?: [A-Za-z]+){0,2}$')"/>
+      <bind nodeset="/contact/observation/_160642_altContactPhone_99DCT" type="string" required="false()" jr:constraintMsg="jr:itext('/contact/observation/_160642_altContactPhone_99DCT:jr:constraintMsg')" constraint="regex(.,'^([+]?[1-9]{3})([0-9]{9})$') or regex(.,'^[0-9]{10}$')"/>
+      <bind nodeset="/contact/observation/_165004_contactedByPeerEductor_99DCT" type="select1" required="false()"/>
+      <bind nodeset="/contact/observation/_165137_programReceivingServiceFrom_99DCT" type="string" relevant=" /contact/observation/_165004_contactedByPeerEductor_99DCT =&quot;_1065_yes_99DCT&quot;"/>
       <bind nodeset="/contact/observation/_165006_hotspotFrequented_99DCT" type="string"/>
-      <bind nodeset="/contact/observation/_165005_hotspotType_99DCT" required="false()" type="select1"/>
-      <bind nodeset="/contact/observation/_165298_otherHotspot_999DCT" relevant=" /contact/observation/_165005_hotspotType_99DCT =&quot;_5622_other_99DCT&quot;" type="string"/>
-      <bind constraint=". &lt;= today()" jr:constraintMsg="jr:itext('/contact/observation/_165144_yearStartedSexWork_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_165144_yearStartedSexWork_99DCT" type="date"/>
-      <bind constraint=". &lt;= today()" jr:constraintMsg="jr:itext('/contact/observation/_165144_yearStartedMSM_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_165144_yearStartedMSM_99DCT" relevant=" /contact/observation/_164929_populationType_99DCT =&quot;_160578_msm_99DCT&quot;" type="date"/>
-      <bind constraint=". &lt;= today()" jr:constraintMsg="jr:itext('/contact/observation/_165144_yearStartedDrugs_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_165144_yearStartedDrugs_99DCT" type="date"/>
-      <bind calculate="format-date( /contact/observation/_165144_yearStartedSexWork_99DCT ,&quot;%Y&quot;)" nodeset="/contact/observation/_165030_yearStartedSexWork_99DCT" type="string"/>
-      <bind calculate="format-date( /contact/observation/_165144_yearStartedMSM_99DCT ,&quot;%Y&quot;)" nodeset="/contact/observation/_165031_yearStartedMSM_99DCT" type="string"/>
-      <bind calculate="format-date( /contact/observation/_165144_yearStartedDrugs_99DCT ,&quot;%Y&quot;)" nodeset="/contact/observation/_165032_yearStartedDrugs_99DCT" type="string"/>
-      <bind constraint=". &gt;= 1 and . &lt;= 200" jr:constraintMsg="jr:itext('/contact/observation/_165007_averageSexActPerWeek_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_165007_averageSexActPerWeek_99DCT" type="int"/>
-      <bind constraint=". &gt;= 1 and . &lt;= 200" jr:constraintMsg="jr:itext('/contact/observation/_165007_averageAnal_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_165007_averageAnal_99DCT" type="int"/>
-      <bind constraint=". &gt;= 1 and . &lt;= 200" jr:constraintMsg="jr:itext('/contact/observation/_165009_averageDrugInject_99DCT:jr:constraintMsg')" nodeset="/contact/observation/_165009_averageDrugInject_99DCT" relevant=" /contact/observation/_164929_populationType_99DCT =&quot;_105_pwid_99DCT&quot;" type="int"/>
-      <bind calculate="concat('uuid:', uuid())" nodeset="/contact/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/contact/observation/_165005_hotspotType_99DCT" type="select1" required="false()"/>
+      <bind nodeset="/contact/observation/_165298_otherHotspot_999DCT" type="string" relevant=" /contact/observation/_165005_hotspotType_99DCT =&quot;_5622_other_99DCT&quot;"/>
+      <bind nodeset="/contact/observation/_165144_yearStartedSexWork_99DCT" type="date" jr:constraintMsg="jr:itext('/contact/observation/_165144_yearStartedSexWork_99DCT:jr:constraintMsg')" constraint=". &lt;= today()"/>
+      <bind nodeset="/contact/observation/_165144_yearStartedMSM_99DCT" type="date" jr:constraintMsg="jr:itext('/contact/observation/_165144_yearStartedMSM_99DCT:jr:constraintMsg')" relevant=" /contact/observation/_164929_populationType_99DCT =&quot;_160578_msm_99DCT&quot;" constraint=". &lt;= today()"/>
+      <bind nodeset="/contact/observation/_165144_yearStartedDrugs_99DCT" type="date" jr:constraintMsg="jr:itext('/contact/observation/_165144_yearStartedDrugs_99DCT:jr:constraintMsg')" constraint=". &lt;= today()"/>
+      <bind nodeset="/contact/observation/_165030_yearStartedSexWork_99DCT" type="string" calculate="format-date( /contact/observation/_165144_yearStartedSexWork_99DCT ,&quot;%Y&quot;)"/>
+      <bind nodeset="/contact/observation/_165031_yearStartedMSM_99DCT" type="string" calculate="format-date( /contact/observation/_165144_yearStartedMSM_99DCT ,&quot;%Y&quot;)"/>
+      <bind nodeset="/contact/observation/_165032_yearStartedDrugs_99DCT" type="string" calculate="format-date( /contact/observation/_165144_yearStartedDrugs_99DCT ,&quot;%Y&quot;)"/>
+      <bind nodeset="/contact/observation/_165007_averageSexActPerWeek_99DCT" type="int" jr:constraintMsg="jr:itext('/contact/observation/_165007_averageSexActPerWeek_99DCT:jr:constraintMsg')" constraint=". &gt;= 1 and . &lt;= 200"/>
+      <bind nodeset="/contact/observation/_165007_averageAnal_99DCT" type="int" jr:constraintMsg="jr:itext('/contact/observation/_165007_averageAnal_99DCT:jr:constraintMsg')" constraint=". &gt;= 1 and . &lt;= 200"/>
+      <bind nodeset="/contact/observation/_165009_averageDrugInject_99DCT" type="int" jr:constraintMsg="jr:itext('/contact/observation/_165009_averageDrugInject_99DCT:jr:constraintMsg')" relevant=" /contact/observation/_164929_populationType_99DCT =&quot;_105_pwid_99DCT&quot;" constraint=". &gt;= 1 and . &lt;= 200"/>
+      <bind nodeset="/contact/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
     </model>
   </h:head>
   <h:body class="pages">
@@ -166,12 +176,8 @@
     </input>
     <group appearance="field-list" ref="/contact/observation">
       <label>General information</label>
-      <select1 appearance="minimal" ref="/contact/observation/_164929_populationType_99DCT">
+      <select1 appearance="minimal" ref="/contact/observation/populationTypeMale">
         <label>Key population type:</label>
-        <item>
-          <label>FSW</label>
-          <value>_165083_fsw_99DCT</value>
-        </item>
         <item>
           <label>MSM</label>
           <value>_160578_msm_99DCT</value>
@@ -189,12 +195,27 @@
           <value>_165085_pwud_99DCT</value>
         </item>
         <item>
-          <label>Transman</label>
-          <value>_165108_transman_99DCT</value>
+          <label>Transgender</label>
+          <value>_165100_transgender_99DCT</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/contact/observation/populationTypeFemale">
+        <label>Key population type:</label>
+        <item>
+          <label>FSW</label>
+          <value>_165083_fsw_99DCT</value>
         </item>
         <item>
-          <label>Transwoman</label>
-          <value>_165107_transwoman_99DCT</value>
+          <label>PWID</label>
+          <value>_105_pwid_99DCT</value>
+        </item>
+        <item>
+          <label>PWUD</label>
+          <value>_165085_pwud_99DCT</value>
+        </item>
+        <item>
+          <label>Transgender</label>
+          <value>_165100_transgender_99DCT</value>
         </item>
       </select1>
       <input ref="/contact/observation/_165028_alias_99DCT">
